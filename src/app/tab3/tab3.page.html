@@ -1,17 +1,71 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>
-      Tab 3
-    </ion-title>
+    <ion-title>Mi perfil</ion-title>
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">Cerrar sesión</ion-button>
+    </ion-buttons>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Tab 3</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="profile-page">
+  <div class="profile-container">
 
-  <app-explore-container name="Tab 3 page"></app-explore-container>
+    <div class="profile-card">
+      <div class="avatar">{{ userName.charAt(0).toUpperCase() }}</div>
+      <h1>{{ userName }}</h1>
+      <p class="role">{{ user?.role || "user" }}</p>
+      <p class="email">{{ userEmail }}</p>
+    </div>
+
+    <div class="section-card">
+      <h2>Información de la cuenta</h2>
+
+      <ion-item lines="none">
+        <ion-label position="stacked">Usuario</ion-label>
+        <ion-input [(ngModel)]="userName" type="text"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label position="stacked">Correo</ion-label>
+        <ion-input [(ngModel)]="userEmail" type="email"></ion-input>
+      </ion-item>
+
+      <div class="info-row">
+        <span class="label">Estado</span>
+        <span class="status">{{ user?.status || 'active' }}</span>
+      </div>
+
+      <ion-button expand="block" (click)="saveProfile()" [disabled]="saving">
+        {{ saving ? 'Guardando...' : 'Guardar cambios' }}
+      </ion-button>
+
+      <p class="success-message" *ngIf="message">{{ message }}</p>
+      <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
+    </div>
+
+    <div class="section-card">
+      <h2>Preferencias</h2>
+
+      <ion-item lines="none">
+        <ion-label>
+          <h3>Notificaciones</h3>
+          <p>Recibir avisos de la aplicación</p>
+        </ion-label>
+        <ion-toggle [(ngModel)]="notifications"></ion-toggle>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label>
+          <h3>Modo oscuro</h3>
+          <p>Usar una apariencia oscura</p>
+        </ion-label>
+        <ion-toggle [(ngModel)]="darkMode" (ionChange)="toggleDarkMode()"></ion-toggle>
+      </ion-item>
+    </div>
+
+    <ion-button expand="block" fill="outline" class="logout-button" (click)="logout()">
+      Cerrar sesión
+    </ion-button>
+
+  </div>
 </ion-content>

@@ -1,31 +1,144 @@
-<ion-header [translucent]="true">
-  <ion-toolbar>
-    <ion-title> Photo Gallery </ion-title>
-  </ion-toolbar>
-</ion-header>
+<ion-content [fullscreen]="true" class="dashboard-page">
+  <div class="dashboard-shell" [class.sidebar-collapsed]="!sidebarOpen">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="avatar"><ion-icon name="personCircleOutline"></ion-icon></div>
+        <div class="user-info">
+          <strong>{{ userName }}</strong>
+          <span>Administrador</span>
+        </div>
+      </div>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Photo Gallery</ion-title>
-    </ion-toolbar>
-  </ion-header>
+      <div class="search-box">
+        <ion-icon name="searchOutline"></ion-icon>
+        <input [(ngModel)]="searchTerm" type="text" placeholder="Search here" />
+      </div>
 
-  <ion-grid>
-    <ion-row>
-      @for (photo of photoService.photos(); track photo.filepath; let position = $index) {
-      <ion-col size="6">
-        <button (click)="showActionSheet(photo, position)">
-          <img [src]="photo.webviewPath" [attr.alt]="'Photo ' + (position + 1)" loading="lazy" />
-        </button>
-      </ion-col>
-      }
-    </ion-row>
-  </ion-grid>
+      <nav class="side-nav">
+        <a class="active"><ion-icon name="gridOutline"></ion-icon><span>Dashboard</span></a>
+        <a><ion-icon name="folderOutline"></ion-icon><span>File manager</span></a>
+        <a><ion-icon name="calendarOutline"></ion-icon><span>Calendar</span></a>
+        <a><ion-icon name="mailOutline"></ion-icon><span>Mailbox</span></a>
+        <a><ion-icon name="cartOutline"></ion-icon><span>Ecommerce</span></a>
+        <a><ion-icon name="bagHandleOutline"></ion-icon><span>Projects</span></a>
+        <a><ion-icon name="settingsOutline"></ion-icon><span>Settings</span></a>
+        <a><ion-icon name="mapOutline"></ion-icon><span>Maps</span></a>
+      </nav>
+    </aside>
 
-  <ion-fab vertical="bottom" horizontal="center" slot="fixed">
-    <ion-fab-button (click)="addPhotoToGallery()">
-      <ion-icon name="camera"></ion-icon>
-    </ion-fab-button>
-  </ion-fab>
+    <main class="main-area">
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="icon-button" (click)="toggleSidebar()" aria-label="Mostrar menú">
+            <ion-icon name="menuOutline"></ion-icon>
+          </button>
+          <div class="brand">admin<span>kit</span></div>
+        </div>
+
+        <div class="topbar-actions">
+          <button class="top-action"><ion-icon name="chatbubbleEllipsesOutline"></ion-icon><b>23</b></button>
+          <button class="top-action"><ion-icon name="notificationsOutline"></ion-icon><b>98</b></button>
+          <button class="profile-button" (click)="goToProfile()">
+            <ion-icon name="personCircleOutline"></ion-icon>
+            <span>{{ userName }}</span>
+            <ion-icon name="chevronDownOutline"></ion-icon>
+          </button>
+          <button class="logout-button" (click)="logout()" title="Cerrar sesión">
+            <ion-icon name="logOutOutline"></ion-icon>
+          </button>
+        </div>
+      </header>
+
+      <div class="content-area">
+        <section class="welcome-card">
+          <div>
+            <h1>Welcome to Dashboard</h1>
+            <p>Hello {{ userName }}, welcome to your dashboard!</p>
+          </div>
+        </section>
+
+        <section class="statistics">
+          <article class="stat-card" *ngFor="let stat of stats">
+            <div class="stat-icon" [class]="stat.className"><ion-icon [name]="stat.icon"></ion-icon></div>
+            <div>
+              <div class="stat-number"><strong>{{ stat.value }}</strong><span>{{ stat.label }}</span></div>
+              <p>{{ stat.detail }}</p>
+            </div>
+          </article>
+        </section>
+
+        <section class="charts-grid">
+          <article class="panel">
+            <h2>Monthly activity</h2>
+            <div class="bar-chart">
+              <div class="chart-column" *ngFor="let value of chartOne; let i = index">
+                <div class="bar-area"><div class="bar primary-bar" [style.height]="chartHeight(value)"></div></div>
+                <span>{{ chartLabels[i] }}</span>
+              </div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <h2>Monthly progress</h2>
+            <div class="bar-chart">
+              <div class="chart-column" *ngFor="let value of chartTwo; let i = index">
+                <div class="bar-area"><div class="bar secondary-bar" [style.height]="chartHeight(value)"></div></div>
+                <span>{{ chartLabels[i] }}</span>
+              </div>
+            </div>
+          </article>
+        </section>
+
+        <section class="panel users-panel">
+          <div class="panel-heading">
+            <h2>Usuarios registrados</h2>
+            <button type="button" class="refresh-button" (click)="loadUsers()" [disabled]="usersLoading">
+              {{ usersLoading ? 'Cargando...' : 'Actualizar' }}
+            </button>
+          </div>
+          <p class="api-error" *ngIf="usersError">{{ usersError }}</p>
+          <div class="person-row" *ngFor="let user of users">
+            <div class="person-avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
+            <div>
+              <strong>{{ user.username }}</strong>
+              <span>{{ user.email }} · {{ user.role }} · {{ user.status }}</span>
+            </div>
+          </div>
+        </section>
+
+        <section class="people-grid">
+          <article class="panel people-panel">
+            <h2>Administrators</h2>
+            <div class="person-row" *ngFor="let person of admins">
+              <div class="person-avatar">{{ person.name.charAt(0) }}</div>
+              <div><strong>{{ person.name }}</strong><span>{{ person.description }}</span></div>
+            </div>
+          </article>
+
+          <article class="panel people-panel">
+            <h2>Moderators</h2>
+            <div class="person-row" *ngFor="let person of moderators">
+              <div class="person-avatar">{{ person.name.charAt(0) }}</div>
+              <div><strong>{{ person.name }}</strong><span>{{ person.description }}</span></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="quick-grid">
+          <article class="quick-card" *ngFor="let item of quickStats" [class]="item.className">
+            <ion-icon [name]="item.icon"></ion-icon>
+            <strong>{{ item.value }}</strong>
+            <span>{{ item.label }}</span>
+          </article>
+        </section>
+
+        <section class="panel trend-panel">
+          <h2>Activity trend</h2>
+          <div class="trend-line">
+            <div *ngFor="let value of chartOne" class="trend-point" [style.bottom]="chartHeight(value)"></div>
+          </div>
+        </section>
+      </div>
+    </main>
+  </div>
 </ion-content>

@@ -1,0 +1,143 @@
+:host {
+  --background: #f4f6f9;
+}
+
+.profile-page {
+  --background: #f4f6f9;
+}
+
+.profile-container {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px 16px 40px;
+}
+
+.profile-card,
+.section-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 18px;
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.06);
+}
+
+.profile-card {
+  text-align: center;
+  padding-top: 30px;
+}
+
+.avatar {
+  width: 90px;
+  height: 90px;
+  margin: 0 auto 14px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #6f6486;
+  color: #fff;
+  font-size: 28px;
+  font-weight: 600;
+}
+
+.profile-card h1 {
+  margin: 0;
+  color: #252636;
+  font-size: 24px;
+  font-weight: 600;
+}
+
+.role {
+  margin: 7px 0 2px;
+  color: #6f6486;
+  font-weight: 500;
+}
+
+.email {
+  margin: 0;
+  color: #777;
+  font-size: 14px;
+}
+
+.section-card h2 {
+  margin: 0 0 14px;
+  color: #252636;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.info-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 13px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.info-row:last-child {
+  border-bottom: 0;
+}
+
+.label {
+  color: #777;
+}
+
+.value {
+  color: #252636;
+  font-weight: 500;
+  text-align: right;
+}
+
+.status {
+  color: #198754;
+  font-weight: 600;
+}
+
+ion-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --background: transparent;
+}
+
+ion-item + ion-item {
+  border-top: 1px solid #eee;
+}
+
+ion-label h3 {
+  color: #252636;
+  font-weight: 500;
+}
+
+ion-label p {
+  color: #777;
+}
+
+.logout-button {
+  --border-color: #dc3545;
+  --color: #dc3545;
+  margin-top: 8px;
+}
+
+@media (max-width: 480px) {
+  .profile-container {
+    padding: 16px 12px 30px;
+  }
+
+  .profile-card,
+  .section-card {
+    border-radius: 12px;
+    padding: 18px;
+  }
+
+  .info-row {
+    flex-direction: column;
+    gap: 4px;
+  }
+
+  .value {
+    text-align: left;
+  }
+}
+
+.success-message { color: #198754; font-size: 13px; }
+.error-message { color: #dc3545; font-size: 13px; }

@@ -88,9 +88,6 @@
       </div>
 
 
-      <div class="api-message error" *ngIf="errorMessage">{{ errorMessage }}</div>
-      <div class="api-message success" *ngIf="successMessage">{{ successMessage }}</div>
-
       <!-- ================================= -->
       <!-- FORMULARIO LOGIN -->
       <!-- ================================= -->
@@ -120,9 +117,11 @@
         />
 
 
-        <button type="submit" class="submit-btn" [disabled]="loading">
-          {{ loading ? 'Conectando...' : 'Log in' }}
-        </button>
+        <input
+          type="submit"
+          class="submit-btn"
+          value="Log in"
+        />
 
       </form>
 
@@ -166,9 +165,11 @@
         />
 
 
-        <button type="submit" class="submit-btn" [disabled]="loading">
-          {{ loading ? 'Registrando...' : 'Register' }}
-        </button>
+        <input
+          type="submit"
+          class="submit-btn"
+          value="Register"
+        />
 
       </form>
 

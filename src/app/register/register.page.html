@@ -1,0 +1,156 @@
+<ion-content [fullscreen]="true" class="register-page">
+  <div class="background-glow glow-one"></div>
+  <div class="background-glow glow-two"></div>
+
+  <main class="register-wrapper">
+    <section class="register-card">
+      <div class="brand">
+        <div class="brand-icon">A</div>
+        <span>Agente</span>
+      </div>
+
+      <div class="heading">
+        <span class="eyebrow">ADMINISTRATION</span>
+        <h1>Create an Account</h1>
+        <p>Register a new user to access the platform.</p>
+      </div>
+
+      <form #registerForm="ngForm" (ngSubmit)="onSubmit(registerForm)" novalidate>
+        <div class="form-grid">
+          <div class="field">
+            <label for="firstName">First Name</label>
+            <input
+              id="firstName"
+              name="firstName"
+              type="text"
+              [(ngModel)]="form.firstName"
+              placeholder="Enter first name"
+              required
+              autocomplete="given-name"
+            />
+          </div>
+
+          <div class="field">
+            <label for="lastName">Last Name</label>
+            <input
+              id="lastName"
+              name="lastName"
+              type="text"
+              [(ngModel)]="form.lastName"
+              placeholder="Enter last name"
+              required
+              autocomplete="family-name"
+            />
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="email">Email</label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            [(ngModel)]="form.email"
+            placeholder="name@example.com"
+            required
+            email
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="field">
+          <label for="password">Password</label>
+          <div class="password-wrapper">
+            <input
+              id="password"
+              name="password"
+              [type]="showPassword ? 'text' : 'password'"
+              [(ngModel)]="form.password"
+              (ngModelChange)="validatePasswords()"
+              placeholder="Enter password"
+              required
+              minlength="8"
+              autocomplete="new-password"
+            />
+
+            <button
+              type="button"
+              class="eye-button"
+              (click)="togglePassword()"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path [attr.d]="showPassword ? eyeOffPath : eyePath"></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="confirmPassword">Confirm Password</label>
+          <div class="password-wrapper">
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              [type]="showConfirmPassword ? 'text' : 'password'"
+              [(ngModel)]="form.confirmPassword"
+              (ngModelChange)="validatePasswords()"
+              placeholder="Confirm password"
+              required
+              autocomplete="new-password"
+            />
+
+            <button
+              type="button"
+              class="eye-button"
+              (click)="toggleConfirmPassword()"
+              [attr.aria-label]="showConfirmPassword ? 'Hide password' : 'Show password'"
+            >
+              <svg viewBox="0 0 24 24" aria-hidden="true">
+                <path [attr.d]="showConfirmPassword ? eyeOffPath : eyePath"></path>
+              </svg>
+            </button>
+          </div>
+
+          <small class="error" *ngIf="passwordMismatch">
+            Passwords do not match.
+          </small>
+        </div>
+
+        <label class="privacy">
+          <input
+            type="checkbox"
+            name="privacyCheck"
+            [(ngModel)]="form.privacyAccepted"
+            required
+          />
+          <span>
+            I accept the <a href="#" (click)="$event.preventDefault()">privacy policy</a>
+            and understand that my account information will be stored securely.
+          </span>
+        </label>
+
+        <div class="server-message error-box" *ngIf="errorMessage">
+          {{ errorMessage }}
+        </div>
+
+        <div class="server-message success-box" *ngIf="successMessage">
+          {{ successMessage }}
+        </div>
+
+        <button
+          class="submit-button"
+          type="submit"
+          [disabled]="loading || registerForm.invalid || passwordMismatch"
+        >
+          {{ loading ? 'Creating account...' : 'Create an Account' }}
+        </button>
+      </form>
+
+      <div class="signin">
+        <span>Already have an account?</span>
+        <button type="button" (click)="goToLogin()">Sign In</button>
+      </div>
+    </section>
+  </main>
+</ion-content>
