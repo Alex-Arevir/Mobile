@@ -1,4 +1,4 @@
-<ion-header [translucent]="true">
+<ion-header>
   <ion-toolbar>
     <ion-title>Mi perfil</ion-title>
     <ion-buttons slot="end">
@@ -7,32 +7,46 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true" class="profile-page">
-  <div class="profile-container">
-
+<ion-content class="profile-page">
+  <div class="profile-container" *ngIf="user">
     <div class="profile-card">
-      <div class="avatar">{{ userName.charAt(0).toUpperCase() }}</div>
-      <h1>{{ userName }}</h1>
-      <p class="role">{{ user?.role || "user" }}</p>
-      <p class="email">{{ userEmail }}</p>
+      <div class="avatar">{{ (preferredName || user.username).charAt(0).toUpperCase() }}</div>
+      <h1>{{ preferredName || user.username }}</h1>
+      <p class="role">{{ user.role === 'admin' ? 'Recursos Humanos' : 'Empleado' }}</p>
+      <p class="email">{{ user.email }}</p>
     </div>
 
     <div class="section-card">
-      <h2>Información de la cuenta</h2>
+      <h2>Información personal</h2>
 
       <ion-item lines="none">
-        <ion-label position="stacked">Usuario</ion-label>
-        <ion-input [(ngModel)]="userName" type="text"></ion-input>
+        <ion-label position="stacked">Nombre preferido</ion-label>
+        <ion-input [(ngModel)]="preferredName" type="text"></ion-input>
       </ion-item>
 
       <ion-item lines="none">
-        <ion-label position="stacked">Correo</ion-label>
-        <ion-input [(ngModel)]="userEmail" type="email"></ion-input>
+        <ion-label position="stacked">Número de teléfono</ion-label>
+        <ion-input [(ngModel)]="phone" type="tel"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label position="stacked">Correo electrónico</ion-label>
+        <ion-input [(ngModel)]="email" type="email"></ion-input>
+      </ion-item>
+
+      <ion-item lines="none">
+        <ion-label position="stacked">Nueva contraseña</ion-label>
+        <ion-input [(ngModel)]="newPassword" type="password" placeholder="Dejar vacío para no cambiarla"></ion-input>
       </ion-item>
 
       <div class="info-row">
+        <span class="label">Puesto</span>
+        <span class="status">{{ user.position || 'Por asignar' }}</span>
+      </div>
+
+      <div class="info-row">
         <span class="label">Estado</span>
-        <span class="status">{{ user?.status || 'active' }}</span>
+        <span class="status">{{ user.status }}</span>
       </div>
 
       <ion-button expand="block" (click)="saveProfile()" [disabled]="saving">
@@ -43,29 +57,6 @@
       <p class="error-message" *ngIf="errorMessage">{{ errorMessage }}</p>
     </div>
 
-    <div class="section-card">
-      <h2>Preferencias</h2>
-
-      <ion-item lines="none">
-        <ion-label>
-          <h3>Notificaciones</h3>
-          <p>Recibir avisos de la aplicación</p>
-        </ion-label>
-        <ion-toggle [(ngModel)]="notifications"></ion-toggle>
-      </ion-item>
-
-      <ion-item lines="none">
-        <ion-label>
-          <h3>Modo oscuro</h3>
-          <p>Usar una apariencia oscura</p>
-        </ion-label>
-        <ion-toggle [(ngModel)]="darkMode" (ionChange)="toggleDarkMode()"></ion-toggle>
-      </ion-item>
-    </div>
-
-    <ion-button expand="block" fill="outline" class="logout-button" (click)="logout()">
-      Cerrar sesión
-    </ion-button>
-
+    <ion-button expand="block" fill="outline" (click)="logout()">Cerrar sesión</ion-button>
   </div>
 </ion-content>

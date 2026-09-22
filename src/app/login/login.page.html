@@ -8,83 +8,41 @@
       <!-- FONDO QUE CAMBIA ENTRE FORMULARIOS -->
       <!-- ================================= -->
 
-      <div
-        class="after"
-        [class.register-mode]="isRegister">
+      <div class="brand-header">
+        <p class="eyebrow">Acceso</p>
+        <h1>{{ isRegister ? 'Crear cuenta' : 'Iniciar sesión' }}</h1>
       </div>
-
 
       <!-- ================================= -->
       <!-- BOTONES LOGIN / REGISTER -->
       <!-- ================================= -->
 
-      <div class="button-box">
-
-        <div
-          class="btn"
-          [class.register-mode]="isRegister">
-        </div>
-
-
+      <div class="button-box" role="tablist" aria-label="Seleccionar modo de acceso">
         <button
           type="button"
           class="toggle-btn"
           [class.active]="!isRegister"
           (click)="login()">
-
-          Log in
-
+          Iniciar sesión
         </button>
-
 
         <button
           type="button"
           class="toggle-btn"
           [class.active]="isRegister"
           (click)="register()">
-
-          Register
-
+          Registrarse
         </button>
-
       </div>
 
 
       <!-- ================================= -->
-      <!-- REDES SOCIALES -->
+      <!-- APP BRAND -->
       <!-- ================================= -->
 
-      <div class="social-icons">
-
-        <a
-          class="icon-link"
-          href="#"
-          aria-label="Facebook">
-
-          <i class="fab fa-facebook cont-icon"></i>
-
-        </a>
-
-
-        <a
-          class="icon-link"
-          href="#"
-          aria-label="Instagram">
-
-          <i class="fab fa-instagram cont-icon"></i>
-
-        </a>
-
-
-        <a
-          class="icon-link"
-          href="#"
-          aria-label="GitHub">
-
-          <i class="fab fa-github cont-icon"></i>
-
-        </a>
-
+      <div class="app-badge" aria-label="Aplicación mobile">
+        <span class="app-badge__dot"></span>
+        QuickHR
       </div>
 
 
@@ -97,32 +55,29 @@
         [class.hidden]="isRegister"
         (ngSubmit)="onLogin()">
 
+        <label class="field-label" for="loginUsername">Usuario</label>
         <input
+          id="loginUsername"
           type="text"
           class="input-field"
-          placeholder="User"
+          placeholder="Tu usuario"
           [(ngModel)]="loginData.username"
           name="loginUsername"
           required
         />
 
-
+        <label class="field-label" for="loginPassword">Contraseña</label>
         <input
+          id="loginPassword"
           type="password"
           class="input-field"
-          placeholder="Password"
+          placeholder="Tu contraseña"
           [(ngModel)]="loginData.password"
           name="loginPassword"
           required
         />
 
-
-        <input
-          type="submit"
-          class="submit-btn"
-          value="Log in"
-        />
-
+        <button type="submit" class="submit-btn">Entrar</button>
       </form>
 
 
@@ -135,42 +90,40 @@
         [class.active]="isRegister"
         (ngSubmit)="onRegister()">
 
+        <label class="field-label" for="registerUsername">Usuario</label>
         <input
+          id="registerUsername"
           type="text"
           class="input-field"
-          placeholder="User"
+          placeholder="Elige un usuario"
           [(ngModel)]="registerData.username"
           name="registerUsername"
           required
         />
 
-
+        <label class="field-label" for="registerEmail">Correo</label>
         <input
+          id="registerEmail"
           type="email"
           class="input-field"
-          placeholder="Email"
+          placeholder="ejemplo@correo.com"
           [(ngModel)]="registerData.email"
           name="registerEmail"
           required
         />
 
-
+        <label class="field-label" for="registerPassword">Contraseña</label>
         <input
+          id="registerPassword"
           type="password"
           class="input-field"
-          placeholder="Password"
+          placeholder="Crea una contraseña"
           [(ngModel)]="registerData.password"
           name="registerPassword"
           required
         />
 
-
-        <input
-          type="submit"
-          class="submit-btn"
-          value="Register"
-        />
-
+        <button type="submit" class="submit-btn">Registrarme</button>
       </form>
 
     </div>

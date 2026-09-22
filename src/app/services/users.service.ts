@@ -2,20 +2,10 @@ import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { Observable, from } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { AuthService, User } from './auth.service';
+import { AuthService } from './auth.service';
+import { User, UserResponse, UserUpdate, UsersResponse } from '../models/hr.models';
 
-export interface UsersResponse {
-  success: boolean;
-  message: string;
-  users: User[];
-  count: number;
-}
-
-export interface UserResponse {
-  success: boolean;
-  message: string;
-  user: User;
-}
+export type { UserResponse, UsersResponse } from '../models/hr.models';
 
 @Injectable({ providedIn: 'root' })
 export class UsersService {
@@ -40,7 +30,7 @@ export class UsersService {
     return from(axios.post<UserResponse>(this.url, data).then(r => r.data));
   }
 
-  update(id: number, data: Partial<{ username: string; email: string; password: string; role: string; status: string }>): Observable<UserResponse> {
+  update(id: number, data: UserUpdate): Observable<UserResponse> {
     return from(axios.patch<UserResponse>(`${this.url}?id=${id}`, data, { headers: this.headers() }).then(r => r.data));
   }
 

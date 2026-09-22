@@ -9,6 +9,9 @@ CREATE TABLE IF NOT EXISTS users (
   username VARCHAR(50) NOT NULL,
   email VARCHAR(120) NOT NULL,
   password_hash VARCHAR(255) NOT NULL,
+  preferred_name VARCHAR(100) NULL,
+  phone VARCHAR(30) NULL,
+  position VARCHAR(100) NULL,
   role ENUM('admin','moderator','user') NOT NULL DEFAULT 'user',
   status ENUM('active','inactive','blocked') NOT NULL DEFAULT 'active',
   api_token CHAR(64) NULL,
@@ -20,6 +23,22 @@ CREATE TABLE IF NOT EXISTS users (
   UNIQUE KEY uq_users_username (username),
   UNIQUE KEY uq_users_email (email),
   UNIQUE KEY uq_users_api_token (api_token)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS employee_requests (
+  id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  user_id INT UNSIGNED NOT NULL,
+  username VARCHAR(50) NOT NULL,
+  email VARCHAR(120) NOT NULL,
+  phone VARCHAR(30) NULL,
+  position VARCHAR(100) NULL,
+  message VARCHAR(500) NULL,
+  status ENUM('pending','approved','rejected') NOT NULL DEFAULT 'pending',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  reviewed_at TIMESTAMP NULL DEFAULT NULL,
+  PRIMARY KEY (id),
+  KEY idx_employee_requests_status (status),
+  CONSTRAINT fk_employee_requests_user FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Seed only for local development.

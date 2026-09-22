@@ -2,9 +2,6 @@
 declare(strict_types=1);
 
 header('Content-Type: application/json; charset=utf-8');
-header('Access-Control-Allow-Origin: *');
-header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
-header('Access-Control-Allow-Methods: GET, POST, PUT, PATCH, DELETE, OPTIONS');
 
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
     http_response_code(204);
@@ -64,6 +61,9 @@ function publicUser(array $user): array {
         'email' => $user['email'],
         'role' => $user['role'] ?? 'user',
         'status' => $user['status'] ?? 'active',
+        'preferred_name' => $user['preferred_name'] ?? null,
+        'phone' => $user['phone'] ?? null,
+        'position' => $user['position'] ?? null,
         'created_at' => $user['created_at'] ?? null,
         'updated_at' => $user['updated_at'] ?? null,
     ];

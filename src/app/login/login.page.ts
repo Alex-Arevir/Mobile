@@ -53,7 +53,7 @@ export class LoginPage {
     this.authService.register(this.registerData).subscribe({
       next: (response) => {
         if (response.success) {
-          alert('Registration completed. You can now log in.');
+          alert('Registration submitted. RH must approve your account before you can log in.');
           this.loginData.username = this.registerData.username;
           this.loginData.password = '';
           this.isRegister = false;

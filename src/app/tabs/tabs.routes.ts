@@ -1,14 +1,17 @@
 import { Routes } from '@angular/router';
 import { TabsPage } from './tabs.page';
+import { adminGuard, authGuard } from '../services/auth.guard';
 
 export const routes: Routes = [
   {
     path: 'tabs',
     component: TabsPage,
+    canActivate: [authGuard],
     children: [
       {
         path: 'tab1',
-        loadComponent: () => import('../tab1/tab1.page').then((m) => m.Tab1Page),
+        redirectTo: '/login',
+        pathMatch: 'full',
       },
       {
         path: 'tab2',
@@ -19,8 +22,13 @@ export const routes: Routes = [
         loadComponent: () => import('../tab3/tab3.page').then((m) => m.Tab3Page),
       },
       {
+        path: 'requests',
+        canActivate: [adminGuard],
+        loadComponent: () => import('../requests/requests.page').then((m) => m.RequestsPage),
+      },
+      {
         path: '',
-        redirectTo: '/tabs/tab1',
+        redirectTo: '/tabs/tab2',
         pathMatch: 'full',
       },
     ],

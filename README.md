@@ -1,4 +1,6 @@
-# Build Your First Ionic App: Photo Gallery (Ionic Angular and Capacitor)
+# Sistema de Recursos Humanos (Ionic Angular y Capacitor)
+
+La documentación escolar del modelo de datos, interfaces TypeScript, servicios, operaciones CRUD, diagrama y uso de IA está disponible en [DOCUMENTACION_HR.md](DOCUMENTACION_HR.md).
 
 Get started with Ionic by building a photo gallery app that runs on iOS, Android, and the web - with just one codebase. This is the complete project referenced in the ["Your First App: Angular" guide](https://ionicframework.com/docs/angular/your-first-app). Follow along to create a complete CRUD (create-read-update-delete) experience.
 

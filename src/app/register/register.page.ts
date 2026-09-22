@@ -13,8 +13,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class RegisterPage {
   form = {
-    firstName: '',
-    lastName: '',
+    username: '',
     email: '',
     password: '',
     confirmPassword: '',
@@ -66,8 +65,7 @@ export class RegisterPage {
     this.loading = true;
 
     this.authService.register({
-      firstName: this.form.firstName.trim(),
-      lastName: this.form.lastName.trim(),
+      username: this.form.username.trim(),
       email: this.form.email.trim().toLowerCase(),
       password: this.form.password,
     }).subscribe({
@@ -76,7 +74,7 @@ export class RegisterPage {
 
         if (response.success) {
           this.successMessage =
-            'Account created successfully. Redirecting to login...';
+            'Request submitted. RH must approve your account before you can log in.';
 
           setTimeout(() => this.router.navigateByUrl('/login'), 1200);
         } else {

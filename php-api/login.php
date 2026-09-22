@@ -16,10 +16,13 @@ if ($username === '' || $password === '') {
 }
 
 $stmt = $pdo->prepare(
-    'SELECT id, username, email, password_hash, role, status, created_at, updated_at
-     FROM users WHERE username = :username OR email = :username LIMIT 1'
+    'SELECT id, username, email, password_hash, role, status, preferred_name, phone, position, created_at, updated_at
+     FROM users WHERE username = :login_username OR email = :login_email LIMIT 1'
 );
-$stmt->execute(['username' => $username]);
+$stmt->execute([
+    'login_username' => $username,
+    'login_email' => $username,
+]);
 $user = $stmt->fetch();
 
 if (!$user || $user['status'] !== 'active' || !password_verify($password, $user['password_hash'])) {

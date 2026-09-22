@@ -9,9 +9,15 @@ $id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 if ($method === 'GET') {
     $authUser = requireAuth($pdo);
+    if ($id > 0 && $id !== (int)$authUser['id'] && $authUser['role'] !== 'admin') {
+        jsonResponse(false, 'You can only view your own user.', [], 403);
+    }
+    if ($id === 0 && $authUser['role'] !== 'admin') {
+        jsonResponse(false, 'Only administrators can view all users.', [], 403);
+    }
     if ($id > 0) {
         $stmt = $pdo->prepare(
-            'SELECT id, username, email, role, status, created_at, updated_at
+            'SELECT id, username, email, role, status, preferred_name, phone, position, created_at, updated_at
              FROM users WHERE id = :id LIMIT 1'
         );
         $stmt->execute(['id' => $id]);
@@ -25,7 +31,7 @@ if ($method === 'GET') {
     }
 
     $stmt = $pdo->query(
-        'SELECT id, username, email, role, status, created_at, updated_at
+        'SELECT id, username, email, role, status, preferred_name, phone, position, created_at, updated_at
          FROM users ORDER BY id DESC'
     );
     $users = array_map('publicUser', $stmt->fetchAll());
@@ -85,7 +91,7 @@ if ($method === 'PUT' || $method === 'PATCH') {
     }
 
     $data = getJsonInput();
-    $allowed = ['username', 'email', 'password', 'role', 'status'];
+    $allowed = ['username', 'email', 'password', 'preferred_name', 'phone', 'position', 'role', 'status'];
     $fields = [];
 
     if ($method === 'PUT') {
@@ -118,6 +124,13 @@ if ($method === 'PUT' || $method === 'PATCH') {
                 jsonResponse(false, 'Username must contain between 3 and 50 characters.', [], 400);
             }
             $fields[] = 'username = :username';
+        } elseif ($field === 'preferred_name' || $field === 'phone') {
+            $fields[] = "{$field} = :{$field}";
+        } elseif ($field === 'position') {
+            if ($authUser['role'] !== 'admin') {
+                continue;
+            }
+            $fields[] = 'position = :position';
         } elseif ($field === 'role' || $field === 'status') {
             if ($authUser['role'] !== 'admin') {
                 continue;
@@ -143,8 +156,8 @@ if ($method === 'PUT' || $method === 'PATCH') {
         }
         if ($field === 'password') {
             $params['password_hash'] = password_hash((string)$data[$field], PASSWORD_DEFAULT);
-        } elseif ($field === 'username' || $field === 'email' || $field === 'role' || $field === 'status') {
-            if ($field === 'role' || $field === 'status') {
+        } elseif ($field === 'username' || $field === 'email' || $field === 'preferred_name' || $field === 'phone' || $field === 'position' || $field === 'role' || $field === 'status') {
+            if ($field === 'position' || $field === 'role' || $field === 'status') {
                 if ($authUser['role'] !== 'admin') continue;
             }
             $params[$field] = trim((string)$data[$field]);
@@ -173,7 +186,7 @@ if ($method === 'PUT' || $method === 'PATCH') {
     $stmt->execute($params);
 
     $stmt = $pdo->prepare(
-        'SELECT id, username, email, role, status, created_at, updated_at FROM users WHERE id = :id'
+        'SELECT id, username, email, role, status, preferred_name, phone, position, created_at, updated_at FROM users WHERE id = :id'
     );
     $stmt->execute(['id' => $targetId]);
 

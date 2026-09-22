@@ -94,7 +94,7 @@
 .profile-button { display: flex; align-items: center; gap: 6px; }
 .logout-button { font-size: 20px; display: flex; }
 
-.content-area { padding: 22px; max-width: 1500px; margin: auto; }
+.content-area { padding: 22px 22px 36px; max-width: 1500px; margin: auto; }
 .welcome-card, .panel, .stat-card {
   background: #313348;
   border-radius: 9px;
@@ -164,3 +164,26 @@
 .panel-heading h2 { margin-bottom: 0; }
 .refresh-button { border: 0; border-radius: 6px; padding: 7px 12px; cursor: pointer; }
 .api-error { color: #fca5a5; font-size: 13px; }
+.employee-search {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 16px 0;
+  padding: 10px 12px;
+  border: 1px solid #454761;
+  border-radius: 8px;
+  background: #282a40;
+  color: #9ca3af;
+}
+.employee-search ion-icon { font-size: 18px; flex: 0 0 auto; }
+.employee-search input {
+  min-width: 0;
+  flex: 1;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #f3f4f6;
+}
+.employee-search input::placeholder { color: #8589a2; }
+.employee-search span { white-space: nowrap; color: #9ca3af; font-size: 12px; }
+.empty-search { margin: 18px 0 8px; color: #9ca3af; }

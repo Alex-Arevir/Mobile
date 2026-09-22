@@ -1,49 +1,39 @@
-<ion-content [fullscreen]="true" class="dashboard-page">
+<ion-content class="dashboard-page">
   <div class="dashboard-shell" [class.sidebar-collapsed]="!sidebarOpen">
     <aside class="sidebar">
       <div class="sidebar-header">
         <div class="avatar"><ion-icon name="personCircleOutline"></ion-icon></div>
         <div class="user-info">
-          <strong>{{ userName }}</strong>
-          <span>Administrador</span>
+          <strong>{{ displayName }}</strong>
+          <span>{{ isHr ? 'Recursos Humanos' : 'Empleado' }}</span>
         </div>
       </div>
 
-      <div class="search-box">
-        <ion-icon name="searchOutline"></ion-icon>
-        <input [(ngModel)]="searchTerm" type="text" placeholder="Search here" />
-      </div>
-
       <nav class="side-nav">
-        <a class="active"><ion-icon name="gridOutline"></ion-icon><span>Dashboard</span></a>
-        <a><ion-icon name="folderOutline"></ion-icon><span>File manager</span></a>
-        <a><ion-icon name="calendarOutline"></ion-icon><span>Calendar</span></a>
-        <a><ion-icon name="mailOutline"></ion-icon><span>Mailbox</span></a>
-        <a><ion-icon name="cartOutline"></ion-icon><span>Ecommerce</span></a>
-        <a><ion-icon name="bagHandleOutline"></ion-icon><span>Projects</span></a>
-        <a><ion-icon name="settingsOutline"></ion-icon><span>Settings</span></a>
-        <a><ion-icon name="mapOutline"></ion-icon><span>Maps</span></a>
+        <a class="active" href="/tabs/tab2">
+          <ion-icon name="peopleOutline"></ion-icon><span>Inicio</span>
+        </a>
+        <a *ngIf="isHr" (click)="goRequests()">
+          <ion-icon name="clipboardOutline"></ion-icon><span>Solicitudes</span>
+        </a>
+        <a (click)="goProfile()">
+          <ion-icon name="personCircleOutline"></ion-icon><span>Mi perfil</span>
+        </a>
       </nav>
     </aside>
 
     <main class="main-area">
       <header class="topbar">
-        <div class="topbar-left">
-          <button class="icon-button" (click)="toggleSidebar()" aria-label="Mostrar menú">
-            <ion-icon name="menuOutline"></ion-icon>
-          </button>
-          <div class="brand">admin<span>kit</span></div>
-        </div>
-
+        <button class="icon-button" (click)="toggleSidebar()">
+          <ion-icon name="menuOutline"></ion-icon>
+        </button>
+        <div class="brand">HR<span>App</span></div>
         <div class="topbar-actions">
-          <button class="top-action"><ion-icon name="chatbubbleEllipsesOutline"></ion-icon><b>23</b></button>
-          <button class="top-action"><ion-icon name="notificationsOutline"></ion-icon><b>98</b></button>
-          <button class="profile-button" (click)="goToProfile()">
+          <button class="profile-button" (click)="goProfile()">
             <ion-icon name="personCircleOutline"></ion-icon>
-            <span>{{ userName }}</span>
-            <ion-icon name="chevronDownOutline"></ion-icon>
+            <span>{{ displayName }}</span>
           </button>
-          <button class="logout-button" (click)="logout()" title="Cerrar sesión">
+          <button class="logout-button" (click)="logout()">
             <ion-icon name="logOutOutline"></ion-icon>
           </button>
         </div>
@@ -52,90 +42,116 @@
       <div class="content-area">
         <section class="welcome-card">
           <div>
-            <h1>Welcome to Dashboard</h1>
-            <p>Hello {{ userName }}, welcome to your dashboard!</p>
+            <h1>Hola, {{ displayName }}</h1>
+            <p>{{ isHr ? 'Panel de administración de Recursos Humanos.' : 'Consulta tu información como empleado.' }}</p>
           </div>
         </section>
 
-        <section class="statistics">
-          <article class="stat-card" *ngFor="let stat of stats">
-            <div class="stat-icon" [class]="stat.className"><ion-icon [name]="stat.icon"></ion-icon></div>
+        <!-- EMPLEADO -->
+        <section *ngIf="!isHr" class="employee-grid">
+          <article class="panel employee-card">
+            <div class="employee-icon"><ion-icon name="briefcaseOutline"></ion-icon></div>
             <div>
-              <div class="stat-number"><strong>{{ stat.value }}</strong><span>{{ stat.label }}</span></div>
-              <p>{{ stat.detail }}</p>
+              <span class="label">Puesto</span>
+              <h2>{{ user?.position || 'Por asignar' }}</h2>
+            </div>
+          </article>
+
+          <article class="panel employee-card">
+            <div class="employee-icon"><ion-icon name="mailOutline"></ion-icon></div>
+            <div>
+              <span class="label">Correo</span>
+              <h2>{{ user?.email }}</h2>
+            </div>
+          </article>
+
+          <article class="panel employee-card">
+            <div class="employee-icon"><ion-icon name="callOutline"></ion-icon></div>
+            <div>
+              <span class="label">Teléfono</span>
+              <h2>{{ user?.phone || 'No registrado' }}</h2>
+            </div>
+          </article>
+
+          <article class="panel employee-card">
+            <div class="employee-icon"><ion-icon name="personCircleOutline"></ion-icon></div>
+            <div>
+              <span class="label">Estado</span>
+              <h2>{{ user?.status || 'active' }}</h2>
             </div>
           </article>
         </section>
 
-        <section class="charts-grid">
-          <article class="panel">
-            <h2>Monthly activity</h2>
-            <div class="bar-chart">
-              <div class="chart-column" *ngFor="let value of chartOne; let i = index">
-                <div class="bar-area"><div class="bar primary-bar" [style.height]="chartHeight(value)"></div></div>
-                <span>{{ chartLabels[i] }}</span>
-              </div>
-            </div>
+        <!-- RH -->
+        <section *ngIf="isHr" class="hr-actions">
+          <article class="action-card" (click)="goRequests()">
+            <ion-icon name="clipboardOutline"></ion-icon>
+            <h2>Solicitudes</h2>
+            <p>Aceptar o rechazar nuevos empleados.</p>
           </article>
 
-          <article class="panel">
-            <h2>Monthly progress</h2>
-            <div class="bar-chart">
-              <div class="chart-column" *ngFor="let value of chartTwo; let i = index">
-                <div class="bar-area"><div class="bar secondary-bar" [style.height]="chartHeight(value)"></div></div>
-                <span>{{ chartLabels[i] }}</span>
-              </div>
-            </div>
+          <article class="action-card">
+            <ion-icon name="peopleOutline"></ion-icon>
+            <h2>Empleados</h2>
+            <p>Consulta y administra los usuarios registrados.</p>
           </article>
         </section>
 
-        <section class="panel users-panel">
+        <section *ngIf="isHr" class="panel users-panel">
           <div class="panel-heading">
-            <h2>Usuarios registrados</h2>
-            <button type="button" class="refresh-button" (click)="loadUsers()" [disabled]="usersLoading">
-              {{ usersLoading ? 'Cargando...' : 'Actualizar' }}
-            </button>
-          </div>
-          <p class="api-error" *ngIf="usersError">{{ usersError }}</p>
-          <div class="person-row" *ngFor="let user of users">
-            <div class="person-avatar">{{ user.username.charAt(0).toUpperCase() }}</div>
             <div>
-              <strong>{{ user.username }}</strong>
-              <span>{{ user.email }} · {{ user.role }} · {{ user.status }}</span>
+              <h2>Empleados registrados</h2>
+              <p>Desde aquí RH puede consultar la plantilla.</p>
             </div>
+            <ion-button fill="outline" (click)="loadUsers()" [disabled]="usersLoading">
+              {{ usersLoading ? 'Cargando...' : 'Actualizar' }}
+            </ion-button>
           </div>
-        </section>
 
-        <section class="people-grid">
-          <article class="panel people-panel">
-            <h2>Administrators</h2>
-            <div class="person-row" *ngFor="let person of admins">
-              <div class="person-avatar">{{ person.name.charAt(0) }}</div>
-              <div><strong>{{ person.name }}</strong><span>{{ person.description }}</span></div>
+          <p class="api-error" *ngIf="usersError">{{ usersError }}</p>
+
+          <div class="employee-search">
+            <ion-icon name="searchOutline" aria-hidden="true"></ion-icon>
+            <input
+              type="search"
+              [(ngModel)]="employeeSearch"
+              placeholder="Buscar por nombre, usuario, correo o puesto"
+              aria-label="Buscar empleados"
+            />
+            <span>{{ filteredUsers.length }} resultado{{ filteredUsers.length === 1 ? '' : 's' }}</span>
+          </div>
+
+          <p class="empty-search" *ngIf="filteredUsers.length === 0">No se encontraron empleados.</p>
+
+          <div class="person-row" *ngFor="let employee of filteredUsers">
+            <div class="person-avatar">{{ (employee.preferred_name || employee.username).charAt(0).toUpperCase() }}</div>
+            <div>
+              <strong>{{ employee.preferred_name || employee.username }}</strong>
+              <span>{{ employee.position || 'Puesto no asignado' }} · {{ employee.email }}</span>
+            <input
+              *ngIf="isHr"
+              type="text"
+              [(ngModel)]="positionDrafts[employee.id]"
+              placeholder="Asignar puesto"
+              [disabled]="savingPositionId === employee.id"
+              (keyup.enter)="updatePosition(employee, positionDrafts[employee.id] || '')"
+            />
+            <ion-button
+              *ngIf="isHr"
+              fill="clear"
+              [disabled]="savingPositionId === employee.id"
+              (click)="updatePosition(employee, positionDrafts[employee.id] || '')">
+              {{ savingPositionId === employee.id ? 'Guardando...' : 'Guardar puesto' }}
+            </ion-button>
+            <ion-button
+              *ngIf="isHr && employee.id !== user?.id"
+              fill="clear"
+              color="danger"
+              [disabled]="deletingUserId === employee.id"
+              (click)="deleteEmployee(employee)">
+              {{ deletingUserId === employee.id ? 'Eliminando...' : 'Eliminar' }}
+            </ion-button>
             </div>
-          </article>
-
-          <article class="panel people-panel">
-            <h2>Moderators</h2>
-            <div class="person-row" *ngFor="let person of moderators">
-              <div class="person-avatar">{{ person.name.charAt(0) }}</div>
-              <div><strong>{{ person.name }}</strong><span>{{ person.description }}</span></div>
-            </div>
-          </article>
-        </section>
-
-        <section class="quick-grid">
-          <article class="quick-card" *ngFor="let item of quickStats" [class]="item.className">
-            <ion-icon [name]="item.icon"></ion-icon>
-            <strong>{{ item.value }}</strong>
-            <span>{{ item.label }}</span>
-          </article>
-        </section>
-
-        <section class="panel trend-panel">
-          <h2>Activity trend</h2>
-          <div class="trend-line">
-            <div *ngFor="let value of chartOne" class="trend-point" [style.bottom]="chartHeight(value)"></div>
           </div>
         </section>
       </div>

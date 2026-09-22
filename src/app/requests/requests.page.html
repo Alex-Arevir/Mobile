@@ -1,0 +1,45 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Solicitudes de empleados</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="requests-page">
+  <div class="page-container">
+    <div class="page-heading">
+      <div>
+        <h1>Solicitudes pendientes</h1>
+        <p>Revisa y decide qué solicitudes de ingreso aceptar.</p>
+      </div>
+      <ion-button fill="outline" (click)="loadRequests()" [disabled]="loading">
+        {{ loading ? 'Actualizando...' : 'Actualizar' }}
+      </ion-button>
+    </div>
+
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+
+    <div class="empty" *ngIf="!loading && requests.length === 0">
+      <ion-icon name="checkmarkCircleOutline"></ion-icon>
+      <h2>No hay solicitudes pendientes</h2>
+      <p>Las nuevas solicitudes aparecerán aquí.</p>
+    </div>
+
+    <article class="request-card" *ngFor="let request of requests">
+      <div class="request-avatar">{{ initial(request.username) }}</div>
+      <div class="request-info">
+        <h2>{{ request.username }}</h2>
+        <p>{{ request.email }}</p>
+        <p>{{ request.phone || 'Sin teléfono' }} · {{ request.position || 'Puesto no especificado' }}</p>
+        <small *ngIf="request.message">{{ request.message }}</small>
+      </div>
+      <div class="request-actions">
+        <ion-button fill="outline" (click)="changeStatus(request, 'rejected')" [disabled]="processingId === request.id">
+          Rechazar
+        </ion-button>
+        <ion-button (click)="changeStatus(request, 'approved')" [disabled]="processingId === request.id">
+          Aceptar
+        </ion-button>
+      </div>
+    </article>
+  </div>
+</ion-content>

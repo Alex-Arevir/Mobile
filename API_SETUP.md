@@ -11,9 +11,9 @@ Si ya tenías la tabla `users` del proyecto anterior, ejecuta `database_migratio
 
 ## 2. API
 
-Copia `php-api/` a tu servidor PHP, por ejemplo:
+Copia `php-api/` a tu servidor PHP. En este proyecto XAMPP ya está disponible en:
 
-`htdocs/ionic-api/`
+`http://localhost/Agente/php-api/`
 
 Endpoints:
 
@@ -33,13 +33,23 @@ El token tiene una vigencia de 7 días y se guarda en la base como hash SHA-256.
 
 ## 3. Ionic
 
-`src/environments/environment.ts` debe apuntar a la carpeta pública de PHP:
+En desarrollo web, `src/environments/environment.ts` apunta a:
 
 ```ts
-apiUrl: 'http://localhost/ionic-api'
+apiUrl: 'http://localhost/Agente/php-api'
 ```
 
 En producción cambia `environment.prod.ts` por tu HTTPS real.
+
+### Android
+
+Android no puede usar `localhost` para acceder al servidor del PC:
+
+- Emulador Android Studio: usa `http://10.0.2.2/Agente/php-api`.
+- Dispositivo físico: usa `http://IP_DEL_PC/Agente/php-api` y conecta ambos equipos a la misma red.
+- Producción: usa una URL HTTPS pública o interna accesible desde el dispositivo.
+
+Después de cambiar la URL, ejecuta `npm run build` y sincroniza el proyecto con `npx cap sync android`.
 
 Axios ya está declarado en `package.json`; ejecuta:
 

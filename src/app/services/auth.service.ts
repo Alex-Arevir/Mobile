@@ -2,34 +2,9 @@ import { Injectable } from '@angular/core';
 import axios from 'axios';
 import { Observable, from } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { AuthResponse, LoginRequest, RegisterRequest, User } from '../models/hr.models';
 
-export interface User {
-  id: number;
-  username: string;
-  email: string;
-  role: 'admin' | 'moderator' | 'user';
-  status: 'active' | 'inactive' | 'blocked';
-  created_at?: string | null;
-  updated_at?: string | null;
-}
-
-export interface LoginRequest {
-  username: string;
-  password: string;
-}
-
-export interface RegisterRequest {
-  username: string;
-  email: string;
-  password: string;
-}
-
-export interface AuthResponse {
-  success: boolean;
-  message: string;
-  token?: string;
-  user?: User;
-}
+export type { AuthResponse, LoginRequest, RegisterRequest, User } from '../models/hr.models';
 
 @Injectable({ providedIn: 'root' })
 export class AuthService {

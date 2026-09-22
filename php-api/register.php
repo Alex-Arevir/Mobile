@@ -39,7 +39,7 @@ $hash = password_hash($password, PASSWORD_DEFAULT);
 
 $stmt = $pdo->prepare(
     'INSERT INTO users (username, email, password_hash, role, status)
-     VALUES (:username, :email, :password_hash, "user", "active")'
+     VALUES (:username, :email, :password_hash, "user", "inactive")'
 );
 $stmt->execute([
     'username' => $username,
@@ -49,11 +49,21 @@ $stmt->execute([
 
 $id = (int)$pdo->lastInsertId();
 
+$request = $pdo->prepare(
+    'INSERT INTO employee_requests (user_id, username, email, status)
+     VALUES (:user_id, :username, :email, "pending")'
+);
+$request->execute([
+    'user_id' => $id,
+    'username' => $username,
+    'email' => $email,
+]);
+
 $created = $pdo->prepare(
-    'SELECT id, username, email, role, status, created_at, updated_at FROM users WHERE id = :id'
+    'SELECT id, username, email, role, status, preferred_name, phone, position, created_at, updated_at FROM users WHERE id = :id'
 );
 $created->execute(['id' => $id]);
 
-jsonResponse(true, 'User registered successfully.', [
+jsonResponse(true, 'Registration submitted for HR approval.', [
     'user' => publicUser($created->fetch()),
 ], 201);

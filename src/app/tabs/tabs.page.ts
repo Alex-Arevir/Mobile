@@ -1,17 +1,25 @@
-import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, OnInit } from '@angular/core';
 import { IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel } from '@ionic/angular';
 import { addIcons } from 'ionicons';
-import { logInOutline, gridOutline, personCircleOutline } from 'ionicons/icons';
+import { gridOutline, personCircleOutline, clipboardOutline } from 'ionicons/icons';
+import { AuthService } from '../services/auth.service';
 
 @Component({
   selector: 'app-tabs',
   templateUrl: 'tabs.page.html',
   styleUrls: ['tabs.page.scss'],
   standalone: true,
-  imports: [IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
+  imports: [CommonModule, IonTabs, IonTabBar, IonTabButton, IonIcon, IonLabel],
 })
-export class TabsPage {
-  constructor() {
-    addIcons({ logInOutline, gridOutline, personCircleOutline });
+export class TabsPage implements OnInit {
+  isHr = false;
+
+  constructor(private authService: AuthService) {
+    addIcons({ gridOutline, personCircleOutline, clipboardOutline });
+  }
+
+  ngOnInit(): void {
+    this.isHr = this.authService.getUser()?.role === 'admin';
   }
 }
